@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,6 +19,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,9 +46,9 @@ public class UserControllerTest {
 			return new UserController();
 		}
 	}
-	
+
 	private MockMvc mockMvc;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -63,7 +65,8 @@ public class UserControllerTest {
 		User u = new User(1, "Mike", "1000 N St", "mike@xyz.com");
 
 		when(userService.getUserById(1)).thenReturn(u);
-		mockMvc.perform(get("/users/1")).andExpect(status().isOk()).andExpect(jsonPath("$.id", is(1)))
+		mockMvc.perform(get("/users/1")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.id", is(1)))
 				.andExpect(jsonPath("$.address", is("1000 N St"))).andExpect(jsonPath("$.name", is("Mike")))
 				.andExpect(jsonPath("$.email", is("mike@xyz.com")));
 
@@ -74,9 +77,10 @@ public class UserControllerTest {
 
 	@Test
 	public void testGetNotExistingUserById() throws Exception {
-
 		when(userService.getUserById(1)).thenReturn(null);
-		mockMvc.perform(get("/users/1")).andReturn().equals(null);
+		mockMvc.perform(get("/users/1"))
+		.andExpect(status().isOk())
+		.andReturn().equals(null);
 		verify(userService, atLeastOnce()).getUserById(1);
 
 		verifyNoMoreInteractions(userService);

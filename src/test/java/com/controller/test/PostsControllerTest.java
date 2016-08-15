@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,7 +50,7 @@ public class PostsControllerTest {
 			return new PostsController();
 		}
 	}
-	
+
 	private MockMvc mockMvc;
 
 	@Autowired
@@ -69,8 +71,9 @@ public class PostsControllerTest {
 
 		when(postService.getPostsByUserId(userId)).thenReturn(posts);
 		mockMvc.perform(get("/users/" + userId + "/posts")).andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[1].id", is(2)))
-				.andExpect(jsonPath("$[1].user.id", is(userId))).andExpect(jsonPath("$[1].user.id", is(userId)));
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$[0].id", is(1)))
+				.andExpect(jsonPath("$[1].id", is(2))).andExpect(jsonPath("$[1].user.id", is(userId)))
+				.andExpect(jsonPath("$[1].user.id", is(userId)));
 		verify(postService, atLeastOnce()).getPostsByUserId(userId);
 
 		verifyNoMoreInteractions(postService);
@@ -82,7 +85,8 @@ public class PostsControllerTest {
 		List<Post> posts = getPostsData(userId);
 
 		when(postService.getPosts()).thenReturn(posts);
-		mockMvc.perform(get("/posts")).andExpect(status().isOk()).andExpect(jsonPath("$[0].id", is(1)))
+		mockMvc.perform(get("/posts")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$[0].id", is(1)))
 				.andExpect(jsonPath("$[1].id", is(2))).andExpect(jsonPath("$[1].user.id", is(userId)))
 				.andExpect(jsonPath("$[1].user.id", is(userId)));
 		verify(postService, atLeastOnce()).getPosts();
@@ -102,22 +106,24 @@ public class PostsControllerTest {
 		int userId = 1;
 		when(postService.getPostsByUserId(userId)).thenReturn(new ArrayList<>());
 		mockMvc.perform(get("/users/" + userId + "/posts")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$").isEmpty());
-		
+
 		verify(postService, atLeastOnce()).getPostsByUserId(userId);
 		verifyNoMoreInteractions(postService);
 	}
-	
+
 	@Test
 	public void testGetPostByUserId() throws Exception {
 		int postId = 1;
-		Post p = new  Post();
+		Post p = new Post();
 		p.setId(1);
-		
+
 		when(postService.getPostById(postId)).thenReturn(p);
 		mockMvc.perform(get("/posts/" + postId)).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.id", is(postId)));
-		
+
 		verify(postService, atLeastOnce()).getPostById(postId);
 		verifyNoMoreInteractions(postService);
 	}
@@ -126,10 +132,10 @@ public class PostsControllerTest {
 	public void testPutIsNoTAllowed() throws Exception {
 		mockMvc.perform(put("/posts")).andExpect(status().isMethodNotAllowed());
 		verifyNoMoreInteractions(postService);
-		
+
 		mockMvc.perform(put("/posts/1")).andExpect(status().isMethodNotAllowed());
 		verifyNoMoreInteractions(postService);
-		
+
 		mockMvc.perform(put("/users/1/posts")).andExpect(status().isMethodNotAllowed());
 		verifyNoMoreInteractions(postService);
 	}
@@ -138,10 +144,10 @@ public class PostsControllerTest {
 	public void testDeleteIsNoTAllowed() throws Exception {
 		mockMvc.perform(delete("/posts")).andExpect(status().isMethodNotAllowed());
 		verifyNoMoreInteractions(postService);
-		
+
 		mockMvc.perform(delete("/posts/1")).andExpect(status().isMethodNotAllowed());
 		verifyNoMoreInteractions(postService);
-		
+
 		mockMvc.perform(delete("/users/1/posts")).andExpect(status().isMethodNotAllowed());
 		verifyNoMoreInteractions(postService);
 	}

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,6 +21,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -72,8 +74,10 @@ public class CommentsControllerTest {
 
 		when(commentService.getCommentsByPostId(postId)).thenReturn(comments);
 		mockMvc.perform(get("/posts/" + postId + "/comments")).andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[1].id", is(2)))
-				.andExpect(jsonPath("$[1].post.id", is(postId))).andExpect(jsonPath("$[1].post.id", is(postId)));
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(jsonPath("$[0].id", is(1)))
+				.andExpect(jsonPath("$[1].id", is(2))).andExpect(jsonPath("$[1].post.id", is(postId)))
+				.andExpect(jsonPath("$[1].post.id", is(postId)));
 		verify(commentService, atLeastOnce()).getCommentsByPostId(postId);
 
 		verifyNoMoreInteractions(commentService);
@@ -84,7 +88,7 @@ public class CommentsControllerTest {
 		int postId = 1;
 		when(commentService.getCommentsByPostId(postId)).thenReturn(new ArrayList<>());
 		mockMvc.perform(get("/posts/" + postId + "/comments")).andExpect(status().isOk())
-				.andExpect(jsonPath("$").isEmpty());
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$").isEmpty());
 
 		verify(commentService, atLeastOnce()).getCommentsByPostId(postId);
 		verifyNoMoreInteractions(commentService);
