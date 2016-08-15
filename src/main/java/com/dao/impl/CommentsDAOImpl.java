@@ -1,6 +1,5 @@
 package com.dao.impl;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -24,7 +23,7 @@ public class CommentsDAOImpl implements CommentDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Comment> getCommentsByPostId(int postId) {
+	public List<Comment> getCommentsByPostId(int postId) {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("select c from Comment c join c.post p where p.id = ?");
 		query.setInteger(0, postId);

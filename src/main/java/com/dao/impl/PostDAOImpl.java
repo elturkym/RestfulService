@@ -1,6 +1,6 @@
 package com.dao.impl;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,7 +23,7 @@ public class PostDAOImpl implements PostDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Post> getPostsByUserId(int userId) {
+	public List<Post> getPostsByUserId(int userId) {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Post where user.id = ?");
 		query.setInteger(0, userId);
@@ -31,7 +31,7 @@ public class PostDAOImpl implements PostDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Post> getPosts() {
+	public List<Post> getPosts() {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Post");
 		return query.list();

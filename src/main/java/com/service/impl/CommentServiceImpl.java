@@ -1,6 +1,6 @@
 package com.service.impl;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +23,12 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Collection<Comment> getCommentsByPostId(int postId) {
+	public List<Comment> getCommentsByPostId(int postId) {
 		return commentDAO.getCommentsByPostId(postId);
+	}
+
+	public void setCommentDAO(CommentDAO commentDAO) {
+		this.commentDAO = commentDAO;
 	}
 
 }

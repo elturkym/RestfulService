@@ -11,17 +11,24 @@ public class Comment {
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	private String text;
-	
+
 	@ManyToOne
 	private Post post;
-	
+
 	@ManyToOne
 	private User user;
 
 	public Comment() {
 		super();
+	}
+
+	public Comment(int id, String text, Post post) {
+		super();
+		this.id = id;
+		this.text = text;
+		this.post = post;
 	}
 
 	public int getId() {

@@ -1,6 +1,6 @@
 package com.service.impl;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,13 +23,17 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Collection<Post> getPostsByUserId(int userId) {
+	public List<Post> getPostsByUserId(int userId) {
 		return postDAO.getPostsByUserId(userId);
 	}
 
 	@Override
-	public Collection<Post> getPosts() {
+	public List<Post> getPosts() {
 		return postDAO.getPosts();
+	}
+
+	public void setPostDAO(PostDAO postDAO) {
+		this.postDAO = postDAO;
 	}
 
 }

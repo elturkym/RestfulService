@@ -21,6 +21,13 @@ public class Post {
 		super();
 	}
 
+	public Post(int id, String text, User user) {
+		super();
+		this.id = id;
+		this.text = text;
+		this.user = user;
+	}
+
 	public int getId() {
 		return id;
 	}

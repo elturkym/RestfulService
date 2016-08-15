@@ -1,6 +1,6 @@
 package com.service.impl;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +23,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Collection<User> getUsers() {
-		return getUsers();
+	public List<User> getUsers() {
+		return userDAO.getUsers();
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 
 }

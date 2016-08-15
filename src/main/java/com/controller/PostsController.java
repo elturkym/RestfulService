@@ -1,6 +1,6 @@
 package com.controller;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +18,12 @@ public class PostsController {
 	private PostService postService;
 
 	@RequestMapping(value = "/users/{userId}/posts", method = RequestMethod.GET)
-	public Collection<Post> getPostsByUser(@PathVariable int userId) {
+	public List<Post> getPostsByUser(@PathVariable int userId) {
 		return postService.getPostsByUserId(userId);
 	}
 
 	@RequestMapping(value = "/posts", method = RequestMethod.GET)
-	public Collection<Post> getPost() {
+	public List<Post> getPost() {
 		return postService.getPosts();
 	}
 

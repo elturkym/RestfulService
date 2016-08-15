@@ -1,6 +1,6 @@
 package com.dao.impl;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,7 +23,7 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<User> getUsers() {
+	public List<User> getUsers() {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from User");
 		return query.list();

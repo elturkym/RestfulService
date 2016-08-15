@@ -1,6 +1,6 @@
 package com.controller;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +18,7 @@ public class CommentsController {
 	private CommentService commentService;
 
 	@RequestMapping(value = "/posts/{postId}/comments", method = RequestMethod.GET)
-	public Collection<Comment> getCommetsByPost(@PathVariable int postId) {
+	public List<Comment> getCommetsByPost(@PathVariable int postId) {
 		return commentService.getCommentsByPostId(postId);
 	}
 }
